@@ -1,0 +1,29 @@
+[project]
+name = "ClassWidgets-SDK"
+version = "0.1.0"
+description = "Type stubs for Class Widgets 2 plugin development"
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Typing :: Stubs Only",
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: MIT License",
+]
+dependencies = [
+]
+
+[project.optional-dependencies]
+test = [
+    "PySide6",
+    "RinUI"
+]
+
+[tool.setuptools]
+packages = ["classwidgets.sdk"]
+
+[tool.setuptools.package-data]
+"classwidgets.stubs" = ["*.pyi", "py.typed"]
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
