@@ -3,7 +3,7 @@
 <p>Pure type stubs for Class Widgets 2 plugin development.</p>
 
 [![PyPI version](https://img.shields.io/pypi/v/class-widgets-stubs.svg?style=for-the-badge&color=blue)](https://pypi.org/project/class-widgets-stubs/)
-[![星标](https://img.shields.io/github/stars/class-widgets/class-widgets-stubs?style=for-the-badge&color=orange&label=%E6%98%9F%E6%A0%87)](https://github.com/Class-Widgets/class-widgets-stubs/)
+[![星标](https://img.shields.io/github/stars/Class-Widgets/class-widgets-stubs?style=for-the-badge&color=orange&label=%E6%98%9F%E6%A0%87)](https://github.com/Class-Widgets/class-widgets-stubs/)
 [![License](https://img.shields.io/badge/license-MIT-purple.svg?style=for-the-badge)](https://github.com/Class-Widgets/class-widgets-stubs/)
 
 </div>
