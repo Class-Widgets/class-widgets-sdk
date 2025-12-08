@@ -15,7 +15,7 @@
 > This project is still **in development**. The API may change at any time, so please bear with us.
 
 ## Overview
-`class-widgets-stubs` provides complete type hints and IDE autocompletion for developing plugins for Class Widgets 2.
+`class-widgets-sdk` provides complete type hints and IDE autocompletion for developing plugins for Class Widgets 2.
 
 This is a **type stubs only** package—it contains no executable code. Plugins must be loaded and run within the Class Widgets 2 main application.
 

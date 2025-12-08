@@ -1,5 +1,5 @@
 [project]
-name = "class-widgets-stubs"
+name = "class-widgets-sdk"
 version = "0.1.0"
 description = "Type stubs for Class Widgets 2 plugin development"
 readme = "README.md"
