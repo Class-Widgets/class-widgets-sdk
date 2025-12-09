@@ -59,19 +59,21 @@ ENTRY_PY_TEMPLATE = textwrap.dedent("""\
     {name}
     {description}
     \"\"\"
-    from ClassWidgets.SDK.plugin import BasePlugin
+    
+    from ClassWidgets.SDK import CW2Plugin, PluginAPI
 
-    class Plugin(BasePlugin):
-        def __init__(self):
-            super().__init__()
-            self.id = "{id}"
-            self.name = "{name}"
-            self.version = "{version}"
-            self.author = "{author}"
-            self.icon = "{icon}"
-        
-        def initialize(self):
-            print(f"{{self.name}} v{{self.version}} loaded!")
+
+    class Plugin(CW2Plugin):
+        def __init__(self, api: PluginAPI):
+            super().__init__(api)
+            # 请在此导入第三方库 / Import third-party libraries here
+    
+        def on_load(self):
+            super().on_load()
+            print(f"{name} loaded")
+            
+        def on_unload(self):
+            print(f"{name} unloaded")
 """)
 
 README_TEMPLATE = textwrap.dedent("""\
@@ -128,7 +130,7 @@ class PluginScaffold:
         if not self.target_dir.exists():
             self.target_dir.mkdir(parents=True)
 
-        subdirs = ['qml', 'assets', 'lib']
+        subdirs = ['qml', 'assets']
         for d in subdirs:
             (self.target_dir / d).mkdir(exist_ok=True)
 
@@ -322,8 +324,8 @@ def create_plugin(plugin_dir: Optional[str], force: bool):
         if target_path != Path.cwd():
             click.echo(f"  cd {plugin_dir}")
 
-        click.echo("  pip install -e .")
-        click.echo("  cw-pack serve\n")
+        click.echo("  pip install -e .\n")
+        click.echo(tr("To run and debug your plugin, launch the main Class Widgets application.", "要运行和调试插件，请启动 Class Widgets 主程序。"))
 
     except Exception as e:
         click.secho(f"\n❌ Error: {e}", fg='red')
