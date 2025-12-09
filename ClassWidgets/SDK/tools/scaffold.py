@@ -101,6 +101,7 @@ def get_git_remote_url() -> str:
         # 将 SSH URL 转换为 HTTPS (可选，视偏好而定)
         if url.startswith("git@"):
             url = url.replace(":", "/").replace("git@", "https://")
+        url = url.removesuffix(".git") # Remove trailing ".git"
         return url
     except Exception:
         return ""
