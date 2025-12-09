@@ -1,5 +1,9 @@
+[build-system]
+requires = ["hatchling>=1.20.0"] # 推荐使用较新版本
+build-backend = "hatchling.build"
+
 [project]
-name = "class-widgets-sdk"
+name = "ClassWidgets-SDK"  # 项目名称可以使用大写
 version = "0.1.0"
 description = "Class Widgets 2 Plugin SDK Development tools and type stubs"
 readme = "README.md"
@@ -20,21 +24,17 @@ test = [
     "RinUI"
 ]
 
-[tool.setuptools]
-packages = ["classwidgets.sdk"]
-
-[tool.setuptools.package-data]
-"ClassWidgets.SDK" = [
-    "py.typed",
-    "*.pyi",
-    "**/*.pyi",
-    "assets/*"
+# Hatchling
+[tool.hatch.build.targets.wheel]
+packages = [
+    "ClassWidgets"
+]
+include = [
+    "ClassWidgets/SDK/assets/*",
+    "ClassWidgets/SDK/**/*.pyi",
+    "ClassWidgets/SDK/py.typed",
 ]
 
-[build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [project.scripts]
-cw-plugin-init = "classwidgets.sdk.tools.scaffold:main"
-cw-plugin-pack = "classwidgets.sdk.tools.packager:main"
+cw-plugin-init = "ClassWidgets.SDK.tools.scaffold:create_plugin"
+cw-plugin-pack = "ClassWidgets.SDK.tools.packager:pack_plugin"
