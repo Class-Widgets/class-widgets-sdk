@@ -24,7 +24,12 @@ test = [
 packages = ["classwidgets.sdk"]
 
 [tool.setuptools.package-data]
-"classwidgets.stubs" = ["*.pyi", "py.typed", "*.py"]
+"ClassWidgets.SDK" = [
+    "py.typed",
+    "*.pyi",
+    "**/*.pyi",
+    "assets/*"
+]
 
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]
