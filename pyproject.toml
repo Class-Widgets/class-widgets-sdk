@@ -1,7 +1,7 @@
 [project]
 name = "class-widgets-sdk"
 version = "0.1.0"
-description = "Type stubs for Class Widgets 2 plugin development"
+description = "Class Widgets 2 Plugin SDK Development tools and type stubs"
 readme = "README.md"
 requires-python = ">=3.9"
 classifiers = [
@@ -10,6 +10,8 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
 ]
 dependencies = [
+    "pydantic",
+    "click"
 ]
 
 [project.optional-dependencies]
@@ -22,8 +24,12 @@ test = [
 packages = ["classwidgets.sdk"]
 
 [tool.setuptools.package-data]
-"classwidgets.stubs" = ["*.pyi", "py.typed"]
+"classwidgets.stubs" = ["*.pyi", "py.typed", "*.py"]
 
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project.scripts]
+cw-plugin-init = "classwidgets.sdk.tools.scaffold:main"
+cw-plugin-pack = "classwidgets.sdk.tools.packager:main"
