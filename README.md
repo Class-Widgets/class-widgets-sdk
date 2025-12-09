@@ -86,7 +86,7 @@ The SDK includes powerful command-line tools for plugin development and distribu
 Learn more >
 </summary>
 
-### cw-plugin-init
+### `cw-plugin-init`
 
 Initialize a new Class Widgets plugin project with an interactive setup wizard.
 
@@ -107,7 +107,7 @@ cw-plugin-init my-plugin --force
 2. Enter plugin metadata (name, author, ID, etc.)
 3. Confirm and generate files
 
-### cw-plugin-pack
+### `cw-plugin-pack`
 
 Build and package the plugin into a distributable `.cwplugin` or `.zip` file.
 
