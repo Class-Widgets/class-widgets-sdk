@@ -1,4 +1,6 @@
 <div align="center">
+
+<img src="/docs/logo.png" width="15%" alt="Class Widgets 2">
 <h1>Class Widgets 2 SDK</h1>
 <p>Complete SDK, tools, and type hints for Class Widgets 2 plugin development.</p>
 
