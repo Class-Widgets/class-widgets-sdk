@@ -30,7 +30,7 @@ GITIGNORE_TEMPLATE = textwrap.dedent("""\
     venv/
     .idea/
     .vscode/
-    libs/
+    lib/
     dist/
     build/
     *.egg-info/
@@ -46,7 +46,7 @@ PYPROJECT_TEMPLATE = textwrap.dedent("""\
         {{name = "{author}"}},
     ]
     readme = "README.md"
-    requires-python = ">=3.8"
+    requires-python = ">=3.9"
     dependencies = []
 
     [build-system]

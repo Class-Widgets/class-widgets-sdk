@@ -18,8 +18,8 @@ class PluginManifestModel(BaseModel):
                       description="Display name of the plugin. 插件的显示名称")
     version: str = Field("1.0.0",
                          description="Plugin version, following SemVer. 插件版本，遵循语义化版本控制")
-    api_version: str = Field(f">={sdk_version}",
-                             description="Required main application API version (e.g., '>=2.0.0'). 所需主程序API版本")
+    api_version: str = Field(f"~={sdk_version}",
+                             description="Required main application API version (PEP 440). 所需主程序API版本")
     entry: str = Field("main.py",
                        description="Entry point Python file. 入口Python文件")
     author: str = Field(...,

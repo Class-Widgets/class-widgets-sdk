@@ -5,11 +5,12 @@ Class Widgets 2 Plugin SDK
 
 from .manifest import PluginManifestModel
 from .scaffold import PluginScaffold, create_plugin
-from .packager import PluginPackager
+from .packager import PluginPackager, pack_plugin
 
 __all__ = [
     'PluginManifestModel',
     'PluginScaffold',
     'create_plugin',
+    'pack_plugin',
     'PluginPackager',
 ]
