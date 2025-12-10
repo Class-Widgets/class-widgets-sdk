@@ -1,7 +1,7 @@
 <div align="center">
 
 <img src="/docs/logo.png" width="15%" alt="Class Widgets 2">
-<h1>Class Widgets 2 SDK</h1>
+<h1>Class Widgets SDK</h1>
 <p>Complete SDK, tools, and type hints for Class Widgets 2 plugin development.</p>
 
 [![PyPI version](https://img.shields.io/pypi/v/class-widgets-sdk.svg?style=for-the-badge&color=blue)](https://pypi.org/project/class-widgets-sdk/)
