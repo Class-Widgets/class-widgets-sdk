@@ -1,9 +1,9 @@
 [build-system]
-requires = ["hatchling>=1.20.0"] # 推荐使用较新版本
+requires = ["hatchling>=1.20.0"]
 build-backend = "hatchling.build"
 
 [project]
-name = "ClassWidgets-SDK"  # 项目名称可以使用大写
+name = "Class-Widgets-SDK"
 version = "0.1.0"
 description = "Class Widgets 2 Plugin SDK Development tools and type stubs"
 readme = "README.md"
