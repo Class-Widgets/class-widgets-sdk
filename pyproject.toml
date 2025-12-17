@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "Class-Widgets-SDK"
-version = "0.1.0"
+version = "0.1.1"
 description = "Class Widgets 2 Plugin SDK Development tools and type stubs"
 readme = "README.md"
 requires-python = ">=3.9"

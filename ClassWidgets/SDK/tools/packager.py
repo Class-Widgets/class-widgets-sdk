@@ -64,7 +64,7 @@ class PluginPackager:
             suffix = f".{file_format.lower().lstrip('.')}"
             # output_name = f"{plugin_id}_{version}{suffix}"
             output_name = f"{plugin_id}{suffix}"
-            output_path = self.source_dir.parent / output_name
+            output_path = self.source_dir / output_name
 
         output_path = Path(output_path).resolve()
 
