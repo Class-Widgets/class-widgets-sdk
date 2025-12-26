@@ -1,9 +1,10 @@
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from pathlib import Path
 
 from pydantic import BaseModel
 
-from .api import PluginAPI, QObject
+from .api import PluginAPI, NotificationAPI, QObject
+from .notification import NotificationProvider
 
 
 class ConfigBaseModel(BaseModel): ...
@@ -16,7 +17,7 @@ class CW2Plugin(QObject):
     """
     PATH: Path
     meta: Dict[str, Any]
-    pid: str
+    pid: Optional[str]
     api: PluginAPI
 
     def __init__(self, api: Any) -> None:

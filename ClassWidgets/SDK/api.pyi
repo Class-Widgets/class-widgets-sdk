@@ -27,13 +27,20 @@ class WidgetsAPI:
     ) -> None: ...
 
 
-# NotifyAPI
-class NotifyAPI(QObject):
+# NotificationAPI
+class NotificationAPI(QObject):
     pushed: Signal  # Signal(str)
 
     def __init__(self, app: Any) -> None: ...
 
-    def send(self, message: str) -> None: ...
+    def get_provider(
+        self,
+        plugin: Any,
+        provider_id: str,
+        name: Optional[str] = ...,
+        icon: Optional[Union[str, Path]] = ...,
+        use_system_notify: bool = ...
+    ) -> Any: ...  # 返回 NotificationProvider
 
 
 # ScheduleAPI
@@ -150,7 +157,7 @@ class PluginAPI:
     def __init__(self, app: Any) -> None: ...
 
     widgets: WidgetsAPI
-    notify: NotifyAPI
+    notification: NotificationAPI
     schedule: ScheduleAPI
     theme: ThemeAPI
     runtime: RuntimeAPI
@@ -161,7 +168,7 @@ class PluginAPI:
 
 __all__ = [
     'WidgetsAPI',
-    'NotifyAPI',
+    'NotificationAPI',
     'ScheduleAPI',
     'ThemeAPI',
     'RuntimeAPI',
