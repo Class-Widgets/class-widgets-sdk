@@ -1,0 +1,37 @@
+name: Release ClassWidgets-2 SDK
+
+on:
+  push:
+    tags:
+      - "*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: 🧱 Set up git-cliff
+        uses: kenji-miyake/setup-git-cliff@v2
+
+      - name: 📜 Generate CHANGELOG.md
+        run: |
+          git cliff --latest --tag "${{ github.ref_name }}" --config .git-cliff.toml > CHANGELOG.md
+
+      - name: 🚀 Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Class Widgets 2 SDK ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          body_path: CHANGELOG.md
+          prerelease: ${{ github.event_name == 'push' || github.ref != 'refs/heads/main' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
