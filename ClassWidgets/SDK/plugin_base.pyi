@@ -1,52 +1,69 @@
 from typing import Dict, Any, Optional
 from pathlib import Path
-
+from enum import IntEnum
 from pydantic import BaseModel
 
-from .api import PluginAPI, NotificationAPI, QObject
-from .notification import NotificationProvider
+# 为非检查时提供的抽象基类
+class QObject: ...
+
+class Signal:
+    def emit(self, *args) -> None:
+        pass
+
+from .api import PluginAPI
 
 
-class ConfigBaseModel(BaseModel): ...
+class ConfigBaseModel(BaseModel):
+    """
+    插件配置模型的基类
+    继承自Pydantic的BaseModel，提供配置数据验证和管理功能
+    """
+    ...
 
 
 # CW2Plugin
 class CW2Plugin(QObject):
     """
-    :param api: PluginAPI instance
+    所有Class Widgets 2插件的基类
+    
+    提供插件生命周期管理、API访问和插件注册功能
     """
-    PATH: Path
-    meta: Dict[str, Any]
-    pid: Optional[str]
-    api: PluginAPI
+    initialized: Signal
+    
+    # 插件属性
+    PATH: Path  # 插件根目录路径
+    meta: Dict[str, Any]  # 插件元数据
+    pid: Optional[str]  # 插件ID
+    api: PluginAPI  # 插件API实例
 
-    def __init__(self, api: Any) -> None:
+    def __init__(self, api: PluginAPI) -> None:
         """
-        Initialize the plugin.
-
-        :param api: PluginAPI instance for interacting with the host application
+        初始化插件实例
+        
+        :param api: PluginAPI实例，用于与主应用程序交互
         """
         ...
 
     def _load_plugin_libs(self) -> None:
         """
-        Automatically adds the plugin's 'lib' subdirectory to sys.path.
-        This is an internal method.
+        自动将插件的'lib'子目录添加到sys.path
+        这是一个内部方法
         """
         ...
 
     def on_load(self) -> None:
         """
-        Called when the plugin is loaded.
-        Registers the plugin with the backend bridge if meta.id exists.
+        当插件被加载时调用
+        如果存在meta.id，则向后端桥注册插件
         """
         ...
 
     def on_unload(self) -> None:
         """
-        Called when the plugin is unloaded.
+        当插件被卸载时调用
+        插件应该在此方法中清理资源
         """
         ...
 
 
-__all__ = ['CW2Plugin']
+__all__ = ['CW2Plugin', 'ConfigBaseModel']

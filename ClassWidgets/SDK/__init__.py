@@ -4,7 +4,7 @@ Class Widgets 2 Plugin SDK (Runtime Tools)
 import sys
 from typing import TYPE_CHECKING
 
-__version__ = '0.2.0'
+__version__ = '0.3.0'
 __author__ = 'Class Widgets Official'
 
 

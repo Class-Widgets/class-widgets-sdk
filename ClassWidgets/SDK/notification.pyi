@@ -1,10 +1,10 @@
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, TYPE_CHECKING
 from pathlib import Path
 from enum import IntEnum
 from pydantic import BaseModel
 
-from .api import QObject
-
+# 为非检查时提供的抽象基类
+class QObject: ...
 
 class NotificationLevel(IntEnum):
     """
@@ -31,6 +31,15 @@ class NotificationData(BaseModel):
     use_system: bool = False
 
 
+class NotificationProviderConfig(BaseModel):
+    """
+    通知提供者配置模型
+    """
+    enabled: bool = True
+    use_system_notify: bool = False
+    use_app_notify: bool = True
+
+
 class NotificationProvider(QObject):
     """
     通知提供者类
@@ -42,19 +51,21 @@ class NotificationProvider(QObject):
     name: str
     icon: Optional[str]
     use_system_notify: bool
-    manager: Any
-
+    
+    # 初始化方法
     def __init__(
         self,
         id: str,
         name: str,
-        icon: Optional[Union[str, Path]] = ...,
-        use_system_notify: bool = ...,
-        manager: Any = ...
+        icon: Optional[Union[str, Path]] = None,
+        use_system_notify: bool = False,
+        manager: Any = None
     ) -> None: ...
     
-    def get_config(self) -> Any: ...
+    # 配置相关方法
+    def get_config(self) -> NotificationProviderConfig: ...
     
+    # 推送通知方法
     def push(
         self,
         level: int,
@@ -67,6 +78,7 @@ class NotificationProvider(QObject):
 
 __all__ = [
     'NotificationLevel',
-    'NotificationData', 
+    'NotificationData',
+    'NotificationProviderConfig',
     'NotificationProvider'
 ]

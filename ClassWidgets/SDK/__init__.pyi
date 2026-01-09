@@ -8,7 +8,7 @@ You should debug and run plugins in Class Widgets 2.
 from .plugin_base import CW2Plugin
 from .config import ConfigBaseModel
 from .api import PluginAPI
-from .notification import NotificationProvider, NotificationLevel, NotificationData
+from .notification import NotificationProvider, NotificationLevel, NotificationData, NotificationProviderConfig
 
 __version__: str
 __author__: str
