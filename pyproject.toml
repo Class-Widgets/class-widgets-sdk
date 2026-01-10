@@ -8,6 +8,10 @@ dynamic = ["version"]
 description = "Class Widgets 2 Plugin SDK Development tools and type stubs"
 readme = "README.md"
 requires-python = ">=3.9"
+dependencies = [
+    "pydantic",
+    "click"
+]
 
 [tool.hatch.version]
 path = "ClassWidgets/SDK/__init__.py"
@@ -16,10 +20,6 @@ classifiers = [
     "Typing :: Stubs Only",
     "Development Status :: 3 - Alpha",
     "License :: OSI Approved :: MIT License",
-]
-dependencies = [
-    "pydantic",
-    "click"
 ]
 
 [project.optional-dependencies]
@@ -42,3 +42,4 @@ include = [
 [project.scripts]
 cw-plugin-init = "ClassWidgets.SDK.tools.scaffold:create_plugin"
 cw-plugin-pack = "ClassWidgets.SDK.tools.packager:pack_plugin"
+cw-help = "ClassWidgets.SDK.tools.help:show_help"
