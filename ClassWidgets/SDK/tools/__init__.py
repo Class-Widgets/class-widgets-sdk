@@ -6,6 +6,7 @@ Class Widgets 2 Plugin SDK
 from .manifest import PluginManifestModel
 from .scaffold import PluginScaffold, create_plugin
 from .packager import PluginPackager, pack_plugin
+from .help import show_help
 
 __all__ = [
     'PluginManifestModel',
@@ -13,4 +14,5 @@ __all__ = [
     'create_plugin',
     'pack_plugin',
     'PluginPackager',
+    'show_help',
 ]

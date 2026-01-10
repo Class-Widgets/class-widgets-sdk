@@ -8,17 +8,36 @@ __version__ = '0.3.0'
 __author__ = 'Class Widgets Official'
 
 
-class CW2Plugin:
-    pass
+from .api import (
+    WidgetsAPI,
+    NotificationAPI,
+    ScheduleAPI,
+    ThemeAPI,
+    RuntimeAPI,
+    ConfigAPI,
+    AutomationAPI,
+    UiAPI,
+    PluginAPI,
+)
 
-class ConfigBaseModel:
-    pass
+from .plugin_base import CW2Plugin
+from .config import ConfigBaseModel
 
-class PluginAPI:
-    pass
-
-
-__all__ = ['CW2Plugin', 'ConfigBaseModel', 'PluginAPI', '__version__', '__author__']
+__all__ = [
+    'CW2Plugin', 
+    'ConfigBaseModel', 
+    'PluginAPI',
+    'WidgetsAPI',
+    'NotificationAPI',
+    'ScheduleAPI',
+    'ThemeAPI',
+    'RuntimeAPI',
+    'ConfigAPI',
+    'AutomationAPI',
+    'UiAPI',
+    '__version__', 
+    '__author__'
+]
 
 
 if 'PySide6' not in sys.modules and not TYPE_CHECKING:

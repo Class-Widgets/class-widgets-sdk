@@ -35,12 +35,19 @@ class NotificationAPI(QObject):
 
     def get_provider(
         self,
-        plugin: Any,
         provider_id: str,
         name: Optional[str] = ...,
         icon: Optional[Union[str, Path]] = ...,
         use_system_notify: bool = ...
-    ) -> Any: ...  # 返回 NotificationProvider
+    ) -> Any: ...
+
+    def register_provider(
+        self,
+        provider_id: str,
+        name: Optional[str] = ...,
+        icon: Optional[Union[str, Path]] = ...,
+        use_system_notify: bool = ...
+    ) -> Any: ...
 
 
 # ScheduleAPI
@@ -141,11 +148,10 @@ class UiAPI(QObject):
     @property
     def pages(self) -> List[Dict[str, Any]]: ...
 
-    def unregister_settings_page(self, plugin: Any, qml_path: Union[str, Path]) -> None: ...
+    def unregister_settings_page(self, qml_path: Union[str, Path]) -> None: ...
 
     def register_settings_page(
             self,
-            plugin: Any,
             qml_path: Union[str, Path],
             title: Optional[str] = ...,
             icon: Optional[str] = ...
