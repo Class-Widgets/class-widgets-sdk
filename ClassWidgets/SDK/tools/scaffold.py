@@ -47,7 +47,7 @@ PYPROJECT_TEMPLATE = textwrap.dedent("""\
     ]
     readme = "README.md"
     requires-python = ">=3.9"
-    dependencies = []
+    dependencies = ["class-widgets-sdk"]
 
     [build-system]
     requires = ["setuptools"]
@@ -77,16 +77,62 @@ ENTRY_PY_TEMPLATE = textwrap.dedent("""\
 """)
 
 README_TEMPLATE = textwrap.dedent("""\
-    # {name}
-    
-    {description}
-    
-    ## Getting Started / 开始使用
-    
-    1. Install dependencies / 安装依赖: 
+    <div align="center">
+     <img src="icon.png" alt="插件图标" width="18%">
+     <h1>{name}</h1>
+     
+     {badges}
+     
+     </div>
+     
+     ## 介绍 / Introduction
+     
+     {description}
+     
+     ### 截图 / Screenshots
+     <div align="center">
+     
+     ![示例](docs/example.png)
+     
+     </div>
+     
+     ### 特性 / Features
+     
+     - Feature 1
+     - Feature 2
+     - Feature 3
+     
+     
+     ## Getting Started / 开始使用
+     
+     1. Install dependencies / 安装依赖: 
        `pip install -e .`
        
     2. Run Class Widgets to test / 运行主程序测试.
+    
+    ## 致谢 / Acknowledgements
+    ### 引用资源 / Credits
+    - https://github.com/rinlit-233-shiroko/class-widgets-2
+    - https://github.com/Class-Widgets/class-widgets-sdk
+    
+    ## 版权 / License
+    本项目基于 MIT 协议开源，详情请参阅 LICENSE 文件。
+    
+    The project is licensed under the MIT license. Please refer to the LICENSE file for details.
+    
+    #
+    
+    Copyright © 2026 {author}.
+""")
+
+DOCS_README_TEMPLATE = textwrap.dedent("""\
+    # Screenshots / 截图
+    
+    Please add your plugin screenshots here.
+    请在此处添加插件截图。
+    
+    - Rename `example.png` to your actual screenshot file
+    - 将 `example.png` 重命名为实际的截图文件
 """)
 
 # --- Helper Functions ---
@@ -131,7 +177,7 @@ class PluginScaffold:
         if not self.target_dir.exists():
             self.target_dir.mkdir(parents=True)
 
-        subdirs = ['qml', 'assets']
+        subdirs = ['qml', 'assets', 'docs']
         for d in subdirs:
             (self.target_dir / d).mkdir(exist_ok=True)
 
@@ -142,7 +188,8 @@ class PluginScaffold:
             "README.md": self._generate_readme,
             ".gitignore": lambda: GITIGNORE_TEMPLATE,
             "pyproject.toml": self._generate_pyproject,
-            "icon.png": self._copy_icon  # New: Icon handling
+            "icon.png": self._copy_icon,
+            "docs/README.md": lambda: DOCS_README_TEMPLATE
         }
 
         # 3. Execute
@@ -170,6 +217,7 @@ class PluginScaffold:
                 self.manifest.api_version = f">={major}.0.0"
             self.manifest.save(path)
         else:
+            path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(content, encoding='utf-8')
 
     def _copy_icon(self) -> None:
@@ -193,7 +241,28 @@ class PluginScaffold:
         return ENTRY_PY_TEMPLATE.format(**self.manifest.__dict__)
 
     def _generate_readme(self):
-        return README_TEMPLATE.format(**self.manifest.__dict__)
+        badges = ""
+        if self.manifest.url:
+            badges = f"[![星标](https://img.shields.io/github/stars/{self._extract_github_repo()}/?style=for-the-badge&color=orange&label=星标)]({self.manifest.url})\n"
+            badges += f"[![开源许可证](https://img.shields.io/badge/license-MIT-darkgreen.svg?label=开源许可证&style=for-the-badge)]({self.manifest.url}/blob/main/LICENSE)\n"
+            badges += f"[![下载量](https://img.shields.io/github/downloads/{self._extract_github_repo()}/total.svg?label=下载量&color=green&style=for-the-badge)]({self.manifest.url}/releases)\n"
+        
+        return README_TEMPLATE.format(
+            **self.manifest.__dict__,
+            badges=badges
+        )
+
+    def _extract_github_repo(self) -> str:
+        """Extract GitHub repo path from URL for badges."""
+        if not self.manifest.url:
+            return ""
+        
+        url = self.manifest.url
+        if "github.com" in url:
+            parts = url.split("github.com/")
+            if len(parts) > 1:
+                return parts[1].replace(".git", "")
+        return ""
 
     def _generate_pyproject(self):
         return PYPROJECT_TEMPLATE.format(
