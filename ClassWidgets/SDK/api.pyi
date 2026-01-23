@@ -1,12 +1,9 @@
-from typing import Dict, List, Optional, Any, Union
+from typing import Dict, List, Optional, Any, Union, Generic, TypeVar, Callable
 from datetime import datetime
 from pathlib import Path
 
-
-class QObject: ...
-
-
-class Signal: ...
+from .notification import NotificationPayload
+from .base_model import QObject, Signal
 
 
 class ConfigBaseModel: ...
@@ -29,7 +26,7 @@ class WidgetsAPI:
 
 # NotificationAPI
 class NotificationAPI(QObject):
-    pushed: Signal  # Signal(str)
+    pushed: Signal[NotificationPayload]
 
     def __init__(self, app: Any) -> None: ...
 
@@ -61,7 +58,7 @@ class ScheduleAPI:
 
 # ThemeAPI
 class ThemeAPI(QObject):
-    changed: Signal  # Signal(str)
+    changed: Signal[str]
 
     def __init__(self, app: Any) -> None: ...
 
@@ -70,9 +67,9 @@ class ThemeAPI(QObject):
 
 # RuntimeAPI
 class RuntimeAPI(QObject):
-    updated: Signal  # Signal()
-    statusChanged: Signal  # Signal(str)
-    entryChanged: Signal  # Signal(dict)
+    updated: Signal
+    statusChanged: Signal[str]
+    entryChanged: Signal[str]
 
     def __init__(self, app: Any) -> None: ...
 
@@ -141,7 +138,7 @@ class AutomationAPI:
 
 # UiAPI
 class UiAPI(QObject):
-    settingsPageRegistered: Signal  # Signal()
+    settingsPageRegistered: Signal
 
     def __init__(self) -> None: ...
 

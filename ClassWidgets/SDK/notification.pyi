@@ -1,4 +1,4 @@
-from typing import Optional, Union, Any, TYPE_CHECKING
+from typing import Optional, Union, Any, TypedDict, TYPE_CHECKING
 from pathlib import Path
 from enum import IntEnum
 from pydantic import BaseModel
@@ -29,6 +29,18 @@ class NotificationData(BaseModel):
     closable: bool = True
     silent: bool = False
     use_system: bool = False
+
+# 与 NotificationData 对应的字典结构
+class NotificationPayload(TypedDict):
+    provider_id: str
+    level: int
+    title: str
+    message: Optional[str]
+    icon: Optional[Union[str, Path]]
+    duration: int
+    closable: bool
+    silent: bool
+    use_system: bool
 
 
 class NotificationProviderConfig(BaseModel):
@@ -80,5 +92,6 @@ __all__ = [
     'NotificationLevel',
     'NotificationData',
     'NotificationProviderConfig',
-    'NotificationProvider'
+    'NotificationProvider',
+    'NotificationPayload'
 ]

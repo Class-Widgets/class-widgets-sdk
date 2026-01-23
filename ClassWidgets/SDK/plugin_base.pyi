@@ -3,15 +3,9 @@ from pathlib import Path
 from enum import IntEnum
 from pydantic import BaseModel
 
-# 为非检查时提供的抽象基类
-class QObject: ...
-
-class Signal:
-    def emit(self, *args) -> None:
-        pass
-
 from .api import PluginAPI
 
+from .base_model import QObject, Signal
 
 class ConfigBaseModel(BaseModel):
     """
