@@ -26,7 +26,7 @@ class WidgetsAPI:
 
 # NotificationAPI
 class NotificationAPI(QObject):
-    pushed: Signal[NotificationPayload]  # Signal(NotificationPayload)
+    pushed: Signal[NotificationPayload]
 
     def __init__(self, app: Any) -> None: ...
 
@@ -67,7 +67,7 @@ class ThemeAPI(QObject):
 
 # RuntimeAPI
 class RuntimeAPI(QObject):
-    updated: Signal  # Signal()
+    updated: Signal
     statusChanged: Signal[str]
     entryChanged: Signal[str]
 
@@ -138,7 +138,7 @@ class AutomationAPI:
 
 # UiAPI
 class UiAPI(QObject):
-    settingsPageRegistered: Signal  # Signal()
+    settingsPageRegistered: Signal
 
     def __init__(self) -> None: ...
 

@@ -128,7 +128,7 @@ class RootConfig(ConfigBaseModel):
 
 # ============ Config Manager ============
 class ConfigManager:
-    configChanged: Signal[str] = ...  # Signal 类型
+    configChanged: Signal[str] = ...  
 
     def __init__(self, path: Any, filename: str) -> None: ...
 
