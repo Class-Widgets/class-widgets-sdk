@@ -1,6 +1,8 @@
 from typing import Dict, List, Optional, Any, Union
 from enum import Enum
 
+from .base_model import Signal
+
 
 # Enums
 class LayoutAnchor(str, Enum):
@@ -126,7 +128,7 @@ class RootConfig(ConfigBaseModel):
 
 # ============ Config Manager ============
 class ConfigManager:
-    configChanged: Any = ...  # Signal 类型
+    configChanged: Signal[str] = ...  
 
     def __init__(self, path: Any, filename: str) -> None: ...
 
