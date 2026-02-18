@@ -20,6 +20,7 @@ __all__ = [
     'NotificationProvider',
     'NotificationLevel',
     'NotificationData',
+    'NotificationProviderConfig',
     "__version__",
     "__author__",
 ]

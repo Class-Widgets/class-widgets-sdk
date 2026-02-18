@@ -1,12 +1,69 @@
-from typing import Dict, List, Optional, Any, Union, Generic, TypeVar, Callable
+from typing import Dict, List, Optional, Any, Union, TypedDict
 from datetime import datetime
 from pathlib import Path
+from enum import Enum
 
-from .notification import NotificationPayload
+from .notification import NotificationPayload, NotificationProvider
 from .base_model import QObject, Signal
 
 
 class ConfigBaseModel: ...
+
+
+class RuntimeMetaPayload(TypedDict):
+    id: str
+    version: int
+    maxWeekCycle: int
+    startDate: str
+
+
+class RuntimeEntryPayload(TypedDict):
+    id: str
+    type: str
+    startTime: str
+    endTime: str
+    subjectId: Optional[str]
+    title: Optional[str]
+
+
+class RuntimeEntryChangedPayload(TypedDict, total=False):
+    id: str
+    type: str
+    startTime: str
+    endTime: str
+    subjectId: Optional[str]
+    title: Optional[str]
+
+
+class RuntimeSubjectPayload(TypedDict):
+    id: str
+    name: str
+    simplifiedName: Optional[str]
+    teacher: Optional[str]
+    icon: Optional[str]
+    color: Optional[str]
+    location: Optional[str]
+    isLocalClassroom: bool
+
+
+class RuntimeRemainingTimePayload(TypedDict):
+    minute: int
+    second: int
+
+
+class SettingsPagePayload(TypedDict):
+    id: str
+    page: str
+    title: str
+    icon: str
+
+
+class EntryType(str, Enum):
+    CLASS = "class"
+    BREAK = "break"
+    FREE = "free"
+    ACTIVITY = "activity"
+    UNKNOWN = "unknown"
 
 
 # WidgetsAPI
@@ -36,7 +93,7 @@ class NotificationAPI(QObject):
         name: Optional[str] = ...,
         icon: Optional[Union[str, Path]] = ...,
         use_system_notify: bool = ...
-    ) -> Any: ...
+    ) -> NotificationProvider: ...
 
     def register_provider(
         self,
@@ -44,7 +101,7 @@ class NotificationAPI(QObject):
         name: Optional[str] = ...,
         icon: Optional[Union[str, Path]] = ...,
         use_system_notify: bool = ...
-    ) -> Any: ...
+    ) -> NotificationProvider: ...
 
 
 # ScheduleAPI
@@ -69,7 +126,7 @@ class ThemeAPI(QObject):
 class RuntimeAPI(QObject):
     updated: Signal
     statusChanged: Signal[str]
-    entryChanged: Signal[str]
+    entryChanged: Signal[RuntimeEntryChangedPayload]
 
     def __init__(self, app: Any) -> None: ...
 
@@ -91,19 +148,19 @@ class RuntimeAPI(QObject):
 
     # 日程属性
     @property
-    def schedule_meta(self) -> Optional[Dict[str, Any]]: ...
+    def schedule_meta(self) -> Optional[RuntimeMetaPayload]: ...
 
     @property
-    def current_day_entries(self) -> List[Dict[str, Any]]: ...
+    def current_day_entries(self) -> List[RuntimeEntryPayload]: ...
 
     @property
-    def current_entry(self) -> Optional[Dict[str, Any]]: ...
+    def current_entry(self) -> Optional[RuntimeEntryPayload]: ...
 
     @property
-    def next_entries(self) -> List[Dict[str, Any]]: ...
+    def next_entries(self) -> List[RuntimeEntryPayload]: ...
 
     @property
-    def remaining_time(self) -> Dict[str, int]: ...
+    def remaining_time(self) -> RuntimeRemainingTimePayload: ...
 
     @property
     def progress(self) -> float: ...
@@ -112,7 +169,7 @@ class RuntimeAPI(QObject):
     def current_status(self) -> str: ...
 
     @property
-    def current_subject(self) -> Optional[Dict[str, Any]]: ...
+    def current_subject(self) -> Optional[RuntimeSubjectPayload]: ...
 
     @property
     def current_title(self) -> Optional[str]: ...
@@ -126,7 +183,7 @@ class ConfigAPI:
 
     def get_plugin_model(self, plugin_id: str) -> Optional[ConfigBaseModel]: ...
 
-    def save(self) -> None: ...
+    def save(self) -> Any: ...
 
 
 # AutomationAPI
@@ -140,10 +197,10 @@ class AutomationAPI:
 class UiAPI(QObject):
     settingsPageRegistered: Signal
 
-    def __init__(self) -> None: ...
+    def __init__(self, app: Any) -> None: ...
 
     @property
-    def pages(self) -> List[Dict[str, Any]]: ...
+    def pages(self) -> List[SettingsPagePayload]: ...
 
     def unregister_settings_page(self, qml_path: Union[str, Path]) -> None: ...
 
@@ -159,6 +216,11 @@ class UiAPI(QObject):
 class PluginAPI:
     def __init__(self, app: Any) -> None: ...
 
+    def set_current_plugin(self, plugin: Any) -> None: ...
+
+    @property
+    def current_plugin(self) -> Any: ...
+
     widgets: WidgetsAPI
     notification: NotificationAPI
     schedule: ScheduleAPI
@@ -170,6 +232,13 @@ class PluginAPI:
 
 
 __all__ = [
+    'RuntimeMetaPayload',
+    'RuntimeEntryPayload',
+    'RuntimeEntryChangedPayload',
+    'RuntimeSubjectPayload',
+    'RuntimeRemainingTimePayload',
+    'SettingsPagePayload',
+    'EntryType',
     'WidgetsAPI',
     'NotificationAPI',
     'ScheduleAPI',
