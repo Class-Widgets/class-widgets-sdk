@@ -30,7 +30,7 @@ GITIGNORE_TEMPLATE = textwrap.dedent("""\
     venv/
     .idea/
     .vscode/
-    lib/
+    libs/
     dist/
     build/
     *.egg-info/
