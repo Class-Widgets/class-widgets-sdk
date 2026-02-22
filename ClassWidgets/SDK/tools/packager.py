@@ -182,7 +182,7 @@ class PluginPackager:
 
         print_step(tr(f"Installing {len(deps)} dependencies...", f"正在安装 {len(deps)} 个依赖..."))
 
-        # 目标目录名 lib
+        # 目标目录名 libs
         lib_dir = self.build_dir / "libs"
         lib_dir.mkdir(exist_ok=True)
 
