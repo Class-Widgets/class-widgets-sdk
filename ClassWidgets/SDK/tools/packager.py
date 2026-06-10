@@ -190,6 +190,7 @@ class PluginPackager:
             sys.executable, "-m", "pip", "install",
             *deps,
             "--target", str(lib_dir),
+            "--no-deps",
             "--no-python-version-warning",
             "--disable-pip-version-check",
             "--upgrade"
