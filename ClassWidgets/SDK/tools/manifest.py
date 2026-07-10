@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from pathlib import Path
 from pydantic import BaseModel, Field, field_validator, ConfigDict
 import json
@@ -23,7 +23,8 @@ class PluginManifestModel(BaseModel):
                 "description": "A useful plugin.",
                 "url": "https://github.com/owner/repo",
                 "readme": "README.md",
-                "icon": "icon.png"
+                "icon": "icon.png",
+                "tag_ids": []
             }
         }
     )
@@ -51,6 +52,8 @@ class PluginManifestModel(BaseModel):
                                   description="Path to the README file. 自述文件路径")
     icon: Optional[str] = Field(None,
                                 description="Path to the icon file. 图标文件路径")
+    tag_ids: List[str] = Field(default_factory=list,
+                               description="Tag IDs for the plugin registry. 插件市场标签ID列表")
 
     # --- Validators 验证器 ---
     @field_validator('id')

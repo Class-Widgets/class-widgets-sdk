@@ -81,6 +81,17 @@ def show_commands_help():
                 "cw-help                          # 显示完整帮助",
                 "cw-help plugin-init            # 显示 plugin-init 命令帮助"
             ]
+        },
+        {
+            "name": "cw-plugin-publish",
+            "usage": "cw-plugin-publish [选项] [目录]",
+            "description": "发布插件到 Class Widgets 插件市场",
+            "examples": [
+                "cw-plugin-publish                          # 发布当前目录插件",
+                "cw-plugin-publish --token cwpt_xxx         # 指定发布令牌",
+                "cw-plugin-publish --dry-run                # 仅预览不发布",
+                "cw-plugin-publish --api-url http://localhost:3000  # 调试模式"
+            ]
         }
     ]
     
@@ -136,7 +147,35 @@ def show_detailed_help(command_name: str = None):
             click.echo("  --help         显示帮助信息")
             
             print_tip("提示", "生成的 .cwplugin 文件可以直接在 Class Widgets 2 中安装")
-            
+
+        elif 'publish' in command_name:
+            print_command(
+                "cw-plugin-publish",
+                "cw-plugin-publish [选项] [目录]",
+                "发布插件到 Class Widgets 插件市场",
+                [
+                    "cw-plugin-publish                          # 发布当前目录插件",
+                    "cw-plugin-publish --token cwpt_xxx         # 指定发布令牌",
+                    "cw-plugin-publish --dry-run                # 仅预览不发布",
+                    "cw-plugin-publish --api-url http://localhost:3000  # 调试模式"
+                ]
+            )
+
+            print_section("选项说明")
+            click.echo("  --token, -t    发布令牌（或设置 CWPT_TOKEN 环境变量）")
+            click.echo("  --api-url      API 基础 URL（默认: https://plaza.cw.rinlit.cn/）")
+            click.echo("  --branch, -b   仓库分支（自动从 git 检测，回退: main）")
+            click.echo("  --dry-run      仅验证并预览，不实际发布")
+            click.echo("  --help         显示帮助信息")
+
+            print_section("发布流程")
+            click.echo("  1. 读取 cwplugin.json 验证插件信息")
+            click.echo("  2. 验证发布令牌（token）")
+            click.echo("  3. 发送发布请求到插件市场")
+            click.echo("  4. 返回发布结果")
+
+            print_tip("提示", "发布令牌可在 Class Widgets 控制台生成，仅展示一次请妥善保存")
+
         else:
             click.secho(f"❌ 未知命令: {command_name}", fg='red', bold=True)
             click.echo("使用 'cw-help' 查看所有可用命令")
@@ -150,7 +189,8 @@ def show_detailed_help(command_name: str = None):
         click.echo("  2. 开发插件:  编辑 my-plugin/main.py")
         click.echo("  3. 测试插件:  pip install -e .")
         click.echo("  4. 打包插件:  cw-plugin-pack my-plugin")
-        click.echo("  5. 分发插件:  安装 .cwplugin 文件")
+        click.echo("  5. 发布插件:  cw-plugin-publish --token <your-token>")
+        click.echo("  6. 分发插件:  安装 .cwplugin 文件")
         
         print_section("重要提示")
         click.echo("  • 所有命令都支持 --help 参数查看详细用法")
@@ -172,6 +212,7 @@ def show_help(command: str = None):
     可用命令:
         plugin-init          初始化新插件项目
         plugin-pack          打包插件项目
+        plugin-publish       发布插件到插件市场
     """
     print_header()
     

@@ -82,6 +82,7 @@ The SDK includes powerful command-line tools for plugin development and distribu
 | :--- | :--- |
 | `cw-plugin-init` | Generate a new plugin project scaffold. |
 | `cw-plugin-pack` | Build and package the plugin into a distributable `.cwplugin` or `.zip` file. |
+| `cw-plugin-publish` | Publish a plugin to the Class Widgets plugin registry. |
 
 <details>
 <summary align="center">
@@ -130,6 +131,47 @@ cw-plugin-pack ./my-plugin
 #### Format
 - `.cwplugin` - Recommended plugin format
 - `.zip` - Standard archive format
+
+### `cw-plugin-publish`
+
+Publish a plugin to the Class Widgets plugin registry. This reads `cwplugin.json` and sends the plugin metadata to the registry API.
+
+```bash
+# Publish current directory plugin (token from CWPT_TOKEN env var)
+cw-plugin-publish
+
+# Publish with explicit token
+cw-plugin-publish --token cwpt_xxxxxxxxxxxxxxxxxxxx
+
+# Dry run — validate and preview without publishing
+cw-plugin-publish --dry-run
+
+# Use a custom API URL for debugging
+cw-plugin-publish --api-url http://localhost:3000
+
+# Specify branch (auto-detected from git by default)
+cw-plugin-publish --branch dev
+```
+
+#### Options:
+- `--token, -t` — Publish token (or set `CWPT_TOKEN` env var)
+- `--api-url` — API base URL (default: `https://plaza.cw.rinlit.cn/`)
+- `--branch, -b` — Repository branch (auto-detected from git, fallback: `main`)
+- `--dry-run` — Validate and preview without publishing
+
+#### `cwplugin.json` fields for publishing:
+
+| Field | Required | Description |
+| :--- | :--- | :--- |
+| `id` | Yes | Plugin ID |
+| `name` | Yes | Plugin display name |
+| `version` | Yes | Plugin version |
+| `api_version` | Yes | Required API version |
+| `url` | Yes | Repository URL |
+| `description` | No | Plugin description |
+| `readme` | No | README file path (default: `README.md`) |
+| `icon` | No | Icon file path (default: `icon.png`) |
+| `tag_ids` | No | List of tag IDs for the registry (e.g. `["ai", "tools"]`) |
 
 </details>
 

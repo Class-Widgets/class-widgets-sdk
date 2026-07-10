@@ -43,3 +43,4 @@ include = [
 cw-plugin-init = "ClassWidgets.SDK.tools.scaffold:create_plugin"
 cw-plugin-pack = "ClassWidgets.SDK.tools.packager:pack_plugin"
 cw-help = "ClassWidgets.SDK.tools.help:show_help"
+cw-plugin-publish = "ClassWidgets.SDK.tools.publisher:publish_plugin"

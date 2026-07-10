@@ -1,11 +1,12 @@
 """
 Class Widgets 2 Plugin SDK
-包含用于创建、打包插件的命令行工具。
+包含用于创建、打包、发布插件的命令行工具。
 """
 
 from .manifest import PluginManifestModel
 from .scaffold import PluginScaffold, create_plugin
 from .packager import PluginPackager, pack_plugin
+from .publisher import PluginPublisher, publish_plugin
 from .help import show_help
 
 __all__ = [
@@ -14,5 +15,7 @@ __all__ = [
     'create_plugin',
     'pack_plugin',
     'PluginPackager',
+    'publish_plugin',
+    'PluginPublisher',
     'show_help',
 ]
