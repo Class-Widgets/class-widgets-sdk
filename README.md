@@ -12,11 +12,13 @@
 
 </div>
 
-> [!CAUTION]
+> [!NOTE]
 > 
 > 本项目还处**在开发**阶段，API 接口可能随时发生变化，敬请谅解。
 > 
 > This project is still **in development**. The API may change at any time, so please bear with us.
+>
+> 可从 [Class-Widgets/Plugin-Template-V2](https://github.com/Class-Widgets/plugin-template-v2) 获取最新的插件模板、工作流以快速开始。
 
 ## 概述
 `class-widgets-sdk` 为创建 Class Widgets 2 插件提供了**核心基类**、**开发工具**（如脚手架和打包）以及**完整的类型提示**。
