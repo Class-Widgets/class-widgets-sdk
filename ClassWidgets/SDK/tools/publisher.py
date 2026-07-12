@@ -102,18 +102,18 @@ class PluginPublisher:
             "branch": self.branch,
             "readme": manifest.readme,
             "icon": manifest.icon,
-            "tag_ids": manifest.tag_ids,
+            # "tag_ids": manifest.tag_ids,
         }
         # Remove None values for optional fields
         payload = {k: v for k, v in payload.items() if v is not None}
         return payload
 
     def dry_run(self) -> None:
-        """Validate manifest and preview what would be published."""
+        """Preview what would be published without sending."""
         manifest = self.load_manifest()
         payload = self.build_payload(manifest)
 
-        print_step(tr("Dry run — validating manifest", "试运行 — 正在验证清单"))
+        print_step(tr("Dry run — checking manifest", "试运行 — 验证清单"))
         click.echo("")
 
         print_info(tr("Plugin ID", "插件 ID"), manifest.id)
@@ -125,10 +125,10 @@ class PluginPublisher:
         print_info(tr("Branch", "分支"), self.branch)
         print_info(tr("Readme", "自述文件"), manifest.readme or "README.md")
         print_info(tr("Icon", "图标"), manifest.icon or "icon.png")
-        print_info(
-            tr("Tags", "标签"),
-            ", ".join(manifest.tag_ids) if manifest.tag_ids else "(none)",
-        )
+        # print_info(
+        #     tr("Tags", "标签"),
+        #     ", ".join(manifest.tag_ids) if manifest.tag_ids else "(none)",
+        # )
 
         click.echo("")
         print_info(tr("API URL", "API 地址"), self.api_url)
@@ -137,13 +137,13 @@ class PluginPublisher:
         # Warn about missing url
         if not manifest.url:
             click.secho(
-                f"\n  ⚠️  {tr('Warning: url is required in cwplugin.json for publishing', '警告：cwplugin.json 中未设置 url，发布需要此配置')}",
+                f"\n  ⚠️  {tr('url is required in cwplugin.json to publish', '发布需要 cwplugin.json 中的 url 字段')}",
                 fg="yellow",
             )
 
         click.echo("")
         click.secho(
-            tr("Dry run complete. No request was sent.", "试运行完成，未发送请求。"),
+            tr("Done. No request sent.", "完成，未发送请求。"),
             fg="green",
         )
 
@@ -156,8 +156,8 @@ class PluginPublisher:
         if not manifest.url:
             raise ValueError(
                 tr(
-                    "'url' is required in cwplugin.json for publishing",
-                    "cwplugin.json 中未设置 'url' 字段，发布需要此配置",
+                    "'url' required in cwplugin.json",
+                    "cwplugin.json 缺少 'url' 字段",
                 )
             )
 
@@ -175,7 +175,7 @@ class PluginPublisher:
             },
         )
 
-        print_step(tr("Publishing plugin...", "正在发布插件..."))
+        print_step(tr("Publishing...", "正在发布..."))
         print_info(tr("Plugin ID", "插件 ID"), manifest.id)
         print_info(tr("Version", "版本"), manifest.version)
         print_info(tr("Endpoint", "端点"), endpoint)
@@ -216,15 +216,15 @@ class PluginPublisher:
         if updated_at:
             print_info(tr("Updated at", "更新时间"), updated_at)
 
-        tags = data.get("tags", {})
-        if tags:
-            print_info(
-                tr("Tags applied", "已应用标签"),
-                str(tags.get("appliedTagCount", 0)),
-            )
+        # tags = data.get("tags", {})
+        # if tags:
+        #     print_info(
+        #         tr("Tags applied", "已应用标签"),
+        #         str(tags.get("appliedTagCount", 0)),
+        #     )
 
     def _handle_error(self, status_code: int, data: dict) -> None:
-        """Display a publish error with user-friendly hints."""
+        """Display a publish error with hints."""
         error_msg = data.get("error", "Unknown error")
         click.echo("")
         click.secho(
@@ -244,7 +244,6 @@ class PluginPublisher:
 
         # Handle specific field errors from backend
         if "Missing or invalid field:" in error_msg:
-            # Extract the field name from error message
             import re
             match = re.search(r"Missing or invalid field:\s*(\w+)", error_msg)
             if match:
@@ -253,7 +252,7 @@ class PluginPublisher:
                 click.echo("")
                 click.secho(
                     tr(
-                        f"Please check the '{cw_field}' field in cwplugin.json",
+                        f"Check '{cw_field}' in cwplugin.json",
                         f"请检查 cwplugin.json 中的 '{cw_field}' 字段",
                     ),
                     fg="yellow",
@@ -261,20 +260,20 @@ class PluginPublisher:
 
         if status_code == 401:
             click.secho(
-                f"   {tr('Please check your CWPT_TOKEN.', '请检查你的 CWPT_TOKEN。')}",
+                f"   {tr('Check your CWPT_TOKEN.', '请检查 CWPT_TOKEN。')}",
                 fg="yellow",
             )
             click.secho(
                 tr(
-                    "The token may be invalid, expired, or not authorized for this plugin.",
-                    "令牌可能无效、已过期，或未授权访问此插件。",
+                    "Token invalid, expired, or not authorized for this plugin.",
+                    "令牌无效、已过期，或未授权此插件。",
                 ),
                 fg="yellow",
             )
         elif status_code == 400:
             if "Missing or invalid field" not in error_msg:
                 click.secho(
-                    f"   {tr('Please check your cwplugin.json fields.', '请检查 cwplugin.json 中的字段。')}",
+                    f"   {tr('Check cwplugin.json fields.', '请检查 cwplugin.json 字段。')}",
                     fg="yellow",
                 )
 
@@ -282,22 +281,22 @@ class PluginPublisher:
             click.echo("")
             click.secho(
                 tr(
-                    "The plugin with this ID does not exist in the registry.",
-                    "该插件 ID 在插件市场中不存在。",
+                    "This plugin ID doesn't exist in the registry.",
+                    "该插件 ID 在插件广场中不存在。",
                 ),
                 fg="yellow",
             )
             click.secho(
                 tr(
-                    "Please first register the plugin in the Class Widgets console,",
-                    "请先在 Class Widgets 控制台中注册该插件，",
+                    "Register it in the Class Widgets Plugin Plaza Console first,",
+                    "请先在 Class Widgets 插件广场控制台 注册，",
                 ),
                 fg="yellow",
             )
             click.secho(
                 tr(
-                    "then use this command to update its information.",
-                    "然后再使用此命令更新插件信息。",
+                    "then use this command to update.",
+                    "再用此命令更新。",
                 ),
                 fg="yellow",
             )
@@ -306,15 +305,15 @@ class PluginPublisher:
             click.echo("")
             click.secho(
                 tr(
-                    "The publish token is not authorized for this plugin.",
-                    "发布令牌未授权访问此插件。",
+                    "Token not authorized for this plugin.",
+                    "令牌未授权此插件。",
                 ),
                 fg="yellow",
             )
             click.secho(
                 tr(
-                    "Please use a token that was created for this specific plugin ID.",
-                    "请使用为此插件 ID 创建的发布令牌。",
+                    "Use a token created for this plugin ID.",
+                    "请使用为此插件 ID 创建的令牌。",
                 ),
                 fg="yellow",
             )
@@ -329,23 +328,23 @@ class PluginPublisher:
 @click.option(
     '--token', '-t',
     envvar='CWPT_TOKEN',
-    help=tr('Publish token (or set CWPT_TOKEN env var)', '发布令牌（或设置 CWPT_TOKEN 环境变量）'),
+    help=tr('Publish token (or CWPT_TOKEN env var)', '发布令牌（或环境变量 CWPT_TOKEN）'),
 )
 @click.option(
     '--api-url',
     default=DEFAULT_API_URL,
     show_default=True,
-    help=tr('API base URL (use localhost for debugging)', 'API 基础 URL（调试时可使用 localhost）'),
+    help=tr('API base URL', 'API 基础 URL'),
 )
 @click.option(
     '--branch', '-b',
     default=None,
-    help=tr('Repository branch (auto-detected from git, fallback: main)', '仓库分支（自动从 git 检测，回退: main）'),
+    help=tr('Git branch (auto-detected; default: main)', 'Git 分支（自动检测，默认 main）'),
 )
 @click.option(
     '--dry-run',
     is_flag=True,
-    help=tr('Validate and preview without publishing', '仅验证并预览，不实际发布'),
+    help=tr('Preview without publishing', '仅预览，不发布'),
 )
 def publish_plugin(
     plugin_dir: Optional[str],
@@ -371,22 +370,22 @@ def publish_plugin(
     # 2. Check cwplugin.json exists
     if not (source_path / "cwplugin.json").exists():
         click.secho(
-            f"\n❌ {tr('Error: cwplugin.json not found!', '错误：未找到 cwplugin.json！')}",
+            f"\n❌ {tr('cwplugin.json not found!', '未找到 cwplugin.json！')}",
             fg="red",
         )
         click.echo(
-            tr("Please run this command inside a plugin directory.", "请在插件目录下运行此命令。")
+            tr("Run this command in a plugin directory.", "请在插件目录下运行此命令。")
         )
         sys.exit(1)
 
     # 3. Token check (dry-run can skip token)
     if not dry_run and not token:
         click.secho(
-            f"\n❌ {tr('Error: Publish token is required.', '错误：发布令牌必填。')}",
+            f"\n❌ {tr('Publish token required.', '需要发布令牌。')}",
             fg="red",
         )
         click.echo(
-            tr("Use --token or set CWPT_TOKEN environment variable.", "使用 --token 参数或设置 CWPT_TOKEN 环境变量。")
+            tr("Use --token or set CWPT_TOKEN.", "使用 --token 或设置 CWPT_TOKEN。")
         )
         sys.exit(1)
 

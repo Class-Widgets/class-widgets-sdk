@@ -1,6 +1,6 @@
 """
-Plugin Project Scaffolding Tool
-Class Widgets SDK 插件项目脚手架工具
+Scaffold new CW plugin projects.
+创建新的 Class Widgets 插件项目。
 """
 import sys
 import os
@@ -195,7 +195,7 @@ class PluginScaffold:
         # 3. Execute
         with click.progressbar(
             files.items(),
-            label=click.style('Creating files / 正在生成文件', fg='cyan'),
+            label=click.style('Generating files / 生成文件', fg='cyan'),
             length=len(files)
         ) as bar:
             for filename, generator in bar:
@@ -277,7 +277,7 @@ class PluginScaffold:
 def create_plugin(plugin_dir: Optional[str], force: bool):
     """
     Initialize a new Class Widgets plugin.
-    初始化一个新的 Class Widgets 插件项目。
+    初始化一个新插件项目。
     """
 
     # --- 1. Clean Header (No ASCII Logo) ---
@@ -344,7 +344,7 @@ def create_plugin(plugin_dir: Optional[str], force: bool):
 
     # --- 4. Confirmation ---
 
-    click.echo("\n" + click.style(tr("Configuration Summary", "配置概览"), bold=True) + ":")
+    click.echo("\n" + click.style(tr("Summary", "概览"), bold=True) + ":")
     print_info(tr("Path", "路径"), str(target_path))
     print_info(tr("Name", "名称"), name)
     print_info(tr("Author", "作者"), author)
@@ -355,8 +355,8 @@ def create_plugin(plugin_dir: Optional[str], force: bool):
     # Directory Check
     is_empty = not target_path.exists() or not any(target_path.iterdir())
     if not is_empty and not force:
-        click.secho(f"\n⚠️  {tr('Target directory is not empty!', '目标目录不为空！')}", fg='yellow')
-        if not click.confirm(tr("Merge with existing files?", "是否合并文件?"), default=False):
+        click.secho(f"\n⚠️  {tr('Target directory not empty!', '目标目录不为空！')}", fg='yellow')
+        if not click.confirm(tr("Merge files?", "合并文件?"), default=False):
             click.echo(tr("Aborted.", "已取消"))
             sys.exit(0)
 
@@ -388,14 +388,14 @@ def create_plugin(plugin_dir: Optional[str], force: bool):
         scaffolder.create(force=force or not is_empty)
 
         # --- 6. Success ---
-        click.echo("\n" + click.style(tr("Success!", "创建成功！"), fg='green', bold=True))
-        click.echo(tr("Run the following to start:", "运行以下命令开始开发：") + "\n")
+        click.echo("\n" + click.style(tr("Done!", "创建成功！"), fg='green', bold=True))
+        click.echo(tr("Get started:", "开始开发：") + "\n")
 
         if target_path != Path.cwd():
             click.echo(f"  cd {plugin_dir}")
 
         click.echo("  pip install -e .\n")
-        click.echo(tr("To run and debug your plugin, launch the main Class Widgets application.", "要运行和调试插件，请启动 Class Widgets 主程序。"))
+        click.echo(tr("Launch Class Widgets to test your plugin.", "启动 Class Widgets 主程序来调试插件。"))
 
     except Exception as e:
         click.secho(f"\n❌ Error: {e}", fg='red')

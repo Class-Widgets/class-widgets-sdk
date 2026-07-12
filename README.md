@@ -84,6 +84,7 @@ The SDK includes powerful command-line tools for plugin development and distribu
 | `cw-plugin-pack` | Build and package the plugin into a distributable `.cwplugin` or `.zip` file. |
 | `cw-plugin-publish` | Publish a plugin to the Class Widgets plugin registry. |
 
+
 <details>
 <summary align="center">
 Learn more >
@@ -171,9 +172,11 @@ cw-plugin-publish --branch dev
 | `description` | No | Plugin description |
 | `readme` | No | README file path (default: `README.md`) |
 | `icon` | No | Icon file path (default: `icon.png`) |
-| `tag_ids` | No | List of tag IDs for the registry (e.g. `["ai", "tools"]`) |
+
+[//]: # (| `tag_ids` | No | List of tag IDs for the registry &#40;e.g. `["ai", "tools"]`&#41; |)
 
 </details>
+
 
 ## How It Works
 1.  **Development**: You install this SDK package to get base classes, type hints, autocompletion, and static type checking (with mypy/pyright) in your IDE.

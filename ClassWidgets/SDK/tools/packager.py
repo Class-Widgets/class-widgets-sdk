@@ -52,7 +52,7 @@ class PluginPackager:
         """Execute the packaging pipeline."""
 
         # 1. Validation / 验证
-        print_step(tr("Validating plugin structure...", "正在验证插件结构..."))
+        print_step(tr("Validating plugin...", "验证插件..."))
         self._validate_source()
 
         plugin_id = self.manifest_data.get('id', 'unknown_plugin')
@@ -100,7 +100,7 @@ class PluginPackager:
         required_fields = ['id', 'name', 'version', 'entry']
         for field in required_fields:
             if field not in self.manifest_data:
-                raise ValueError(tr(f"Missing '{field}' in manifest", f"清单缺失 '{field}' 字段"))
+                raise ValueError(tr(f"Missing '{field}' in manifest", f"清单缺少 '{field}'"))
 
         # 检查入口文件
         entry_file = self.source_dir / self.manifest_data['entry']
@@ -110,7 +110,7 @@ class PluginPackager:
         # 检查 Icon (可选但推荐)
         icon_file = self.manifest_data.get('icon')
         if icon_file and not (self.source_dir / icon_file).exists():
-             click.secho(f"    ⚠️  {tr('Warning: Icon file not found', '警告: 未找到图标文件')}: {icon_file}", fg='yellow')
+             click.secho(f"    ⚠️  {tr('Icon not found', '未找到图标')}: {icon_file}", fg='yellow')
 
     def _copy_source_to_build(self):
         """Copy files to temp build dir, respecting ignore patterns."""
@@ -180,7 +180,7 @@ class PluginPackager:
             print_step(tr("No dependencies to install.", "无须安装依赖。"))
             return
 
-        print_step(tr(f"Installing {len(deps)} dependencies...", f"正在安装 {len(deps)} 个依赖..."))
+        print_step(tr(f"Installing {len(deps)} dep(s)...", f"正在安装 {len(deps)} 个依赖..."))
 
         # 目标目录名 libs
         lib_dir = self.build_dir / "libs"
@@ -248,7 +248,7 @@ class PluginPackager:
 @click.command()
 @click.argument('plugin_dir', required=False)
 @click.option('-o', '--output', help='Output file path / 输出路径')
-@click.option('-f', '--format', 'file_format', type=click.Choice(['cwplugin', 'zip'], case_sensitive=False), default='cwplugin', help=tr('Output file format (cwplugin or zip)', '输出文件格式 (cwplugin 或 zip)'))
+@click.option('-f', '--format', 'file_format', type=click.Choice(['cwplugin', 'zip'], case_sensitive=False), default='cwplugin', help=tr('Output format (cwplugin or zip)', '输出格式 (cwplugin 或 zip)'))
 def pack_plugin(plugin_dir: Optional[str], output: Optional[str], file_format: str):
     """
     Package a plugin for distribution.
@@ -268,8 +268,8 @@ def pack_plugin(plugin_dir: Optional[str], output: Optional[str], file_format: s
 
     # 2. Confirm
     if not (source_path / "cwplugin.json").exists():
-        click.secho(f"\n❌ {tr('Error: cwplugin.json not found!', '错误：未找到 cwplugin.json！')}", fg='red')
-        click.echo(tr("Please run this command inside a plugin directory.", "请在插件目录下运行此命令。"))
+        click.secho(f"\n❌ {tr('cwplugin.json not found!', '未找到 cwplugin.json！')}", fg='red')
+        click.echo(tr("Run this command in a plugin directory.", "请在插件目录下运行此命令。"))
         sys.exit(1)
 
     # 3. Execute
@@ -281,7 +281,7 @@ def pack_plugin(plugin_dir: Optional[str], output: Optional[str], file_format: s
         # 4. Success
         size_mb = output_path.stat().st_size / (1024 * 1024)
         click.echo("")
-        click.secho(tr("Packaging Complete!", "打包完成！"), fg='green', bold=True)
+        click.secho(tr("Done!", "打包完成！"), fg='green', bold=True)
         print_info(tr("File", "文件"), str(output_path))
         print_info(tr("Size", "大小"), f"{size_mb:.2f} MB")
 
