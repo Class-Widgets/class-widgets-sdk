@@ -112,6 +112,7 @@ class ScheduleAPI:
 
     def reload(self) -> None: ...
 
+# ScheduleManagementAPI
 class ScheduleManagementAPI:
     def __init__(self, app: Any) -> None: ...
 
@@ -197,6 +198,7 @@ class ConfigAPI:
 
     def save(self) -> Any: ...
 
+# GlobalConfigAPI
 class GlobalConfigAPI:
 
     def __init__(self, app: Any) -> None: ...
@@ -253,6 +255,8 @@ class PluginAPI:
     config: ConfigAPI
     automation: AutomationAPI
     ui: UiAPI
+    schedulemanagement: ScheduleManagementAPI
+    globalconfig: GlobalConfigAPI
 
 
 __all__ = [
@@ -272,4 +276,6 @@ __all__ = [
     'AutomationAPI',
     'UiAPI',
     'PluginAPI',
+    'ScheduleManagementAPI',
+    'GlobalConfigAPI',
 ]
