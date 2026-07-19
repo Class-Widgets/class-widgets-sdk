@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Any, Union, TypedDict
+from typing import Dict, List, Optional, Any, Union, TypedDict, Set
 from datetime import datetime
 from pathlib import Path
 from enum import Enum
@@ -9,6 +9,7 @@ from .base_model import QObject, Signal
 
 class ConfigBaseModel: ...
 
+class ConfigManager: ...
 
 class RuntimeMetaPayload(TypedDict):
     id: str
@@ -112,6 +113,18 @@ class ScheduleAPI:
 
     def reload(self) -> None: ...
 
+    def update(self, schedule_dict: Dict[str, Any]) -> bool: ...
+
+    def set_readonly(self, readonly: bool) -> None: ...
+    @property
+    def readonly(self) -> bool: ...
+
+# ScheduleManagementAPI
+class ScheduleManagementAPI:
+    def __init__(self, app: Any) -> None: ...
+
+    def switch(self, name: str) -> bool: ...
+    def list(self) -> List[Dict[str, str]]: ...
 
 # ThemeAPI
 class ThemeAPI(QObject):
@@ -185,6 +198,20 @@ class ConfigAPI:
 
     def save(self) -> Any: ...
 
+# GlobalConfigAPI
+class GlobalConfigAPI:
+
+    def __init__(self, app: Any) -> None: ...
+
+    @property
+    def configs(self) -> ConfigManager: ...
+
+    def lock(self, keys: str | List[str] | Set[str]) -> None: ...
+    def unlock(self, keys: str | List[str] | Set[str]) -> None: ...
+    def is_locked(self, key: str) -> bool: ...
+    @property
+    def locked_keys(self) -> Set[str]: ...
+
 
 # AutomationAPI
 class AutomationAPI:
@@ -211,7 +238,6 @@ class UiAPI(QObject):
             icon: Optional[str] = ...
     ) -> None: ...
 
-
 # PluginAPI
 class PluginAPI:
     def __init__(self, app: Any) -> None: ...
@@ -229,6 +255,8 @@ class PluginAPI:
     config: ConfigAPI
     automation: AutomationAPI
     ui: UiAPI
+    schedulemanagement: ScheduleManagementAPI
+    globalconfig: GlobalConfigAPI
 
 
 __all__ = [
@@ -248,4 +276,6 @@ __all__ = [
     'AutomationAPI',
     'UiAPI',
     'PluginAPI',
+    'ScheduleManagementAPI',
+    'GlobalConfigAPI',
 ]

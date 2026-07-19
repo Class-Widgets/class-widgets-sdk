@@ -18,6 +18,8 @@ if TYPE_CHECKING:
         AutomationAPI,
         UiAPI,
         PluginAPI,
+        ScheduleManagementAPI,
+        GlobalConfigAPI,
     )
 
     from .plugin_base import CW2Plugin
@@ -34,6 +36,8 @@ else:
     ConfigAPI = type('ConfigAPI', (), {})
     AutomationAPI = type('AutomationAPI', (), {})
     UiAPI = type('UiAPI', (), {})
+    ScheduleManagementAPI = type('ScheduleManagementAPI', (), {})
+    GlobalConfigAPI = type('GlobalConfigAPI', (), {})
 
 __all__ = [
     'CW2Plugin', 
@@ -47,6 +51,8 @@ __all__ = [
     'ConfigAPI',
     'AutomationAPI',
     'UiAPI',
+    'ScheduleManagementAPI',
+    'GlobalConfigAPI',
     '__version__', 
     '__author__'
 ]
