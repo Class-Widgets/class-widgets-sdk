@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Any, Union, TypedDict, Set
+from typing import Any, Dict, List, Literal, Optional, Set, TypedDict, Union
 from datetime import datetime
 from pathlib import Path
 from enum import Enum
@@ -57,6 +57,20 @@ class SettingsPagePayload(TypedDict):
     page: str
     title: str
     icon: str
+
+
+class ApplicationInfoPayload(TypedDict):
+    name: str
+    version: str
+    channel: str
+    pluginApiVersion: str
+    platform: str
+
+
+class DiagnosticLogPayload(TypedDict):
+    time: str
+    level: str
+    message: str
 
 
 class EntryType(str, Enum):
@@ -125,6 +139,19 @@ class ScheduleManagementAPI:
 
     def switch(self, name: str) -> bool: ...
     def list(self) -> List[Dict[str, str]]: ...
+    def add(self, name: str) -> bool: ...
+    def save(self, name: str) -> bool: ...
+
+
+class ApplicationAPI:
+    def __init__(self, app: Any) -> None: ...
+    def get_info(self) -> ApplicationInfoPayload: ...
+    def restart(self) -> None: ...
+
+
+class DiagnosticsAPI:
+    def __init__(self, app: Any) -> None: ...
+    def get_logs(self, limit: int = ...) -> List[DiagnosticLogPayload]: ...
 
 # ThemeAPI
 class ThemeAPI(QObject):
@@ -257,6 +284,8 @@ class PluginAPI:
     ui: UiAPI
     schedulemanagement: ScheduleManagementAPI
     globalconfig: GlobalConfigAPI
+    application: ApplicationAPI
+    diagnostics: DiagnosticsAPI
 
 
 __all__ = [
@@ -266,6 +295,8 @@ __all__ = [
     'RuntimeSubjectPayload',
     'RuntimeRemainingTimePayload',
     'SettingsPagePayload',
+    'ApplicationInfoPayload',
+    'DiagnosticLogPayload',
     'EntryType',
     'WidgetsAPI',
     'NotificationAPI',
@@ -278,4 +309,6 @@ __all__ = [
     'PluginAPI',
     'ScheduleManagementAPI',
     'GlobalConfigAPI',
+    'ApplicationAPI',
+    'DiagnosticsAPI',
 ]
