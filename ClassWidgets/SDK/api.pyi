@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Any, Union, TypedDict
+from typing import Any, Dict, List, Literal, Optional, Set, TypedDict, Union
 from datetime import datetime
 from pathlib import Path
 from enum import Enum
@@ -9,6 +9,7 @@ from .base_model import QObject, Signal
 
 class ConfigBaseModel: ...
 
+class ConfigManager: ...
 
 class RuntimeMetaPayload(TypedDict):
     id: str
@@ -56,6 +57,20 @@ class SettingsPagePayload(TypedDict):
     page: str
     title: str
     icon: str
+
+
+class ApplicationInfoPayload(TypedDict):
+    name: str
+    version: str
+    channel: str
+    pluginApiVersion: str
+    platform: str
+
+
+class DiagnosticLogPayload(TypedDict):
+    time: str
+    level: str
+    message: str
 
 
 class EntryType(str, Enum):
@@ -112,6 +127,31 @@ class ScheduleAPI:
 
     def reload(self) -> None: ...
 
+    def update(self, schedule_dict: Dict[str, Any]) -> bool: ...
+
+    def set_readonly(self, readonly: bool) -> None: ...
+    @property
+    def readonly(self) -> bool: ...
+
+# ScheduleManagementAPI
+class ScheduleManagementAPI:
+    def __init__(self, app: Any) -> None: ...
+
+    def switch(self, name: str) -> bool: ...
+    def list(self) -> List[Dict[str, str]]: ...
+    def add(self, name: str) -> bool: ...
+    def save(self, name: str) -> bool: ...
+
+
+class ApplicationAPI:
+    def __init__(self, app: Any) -> None: ...
+    def get_info(self) -> ApplicationInfoPayload: ...
+    def restart(self) -> None: ...
+
+
+class DiagnosticsAPI:
+    def __init__(self, app: Any) -> None: ...
+    def get_logs(self, limit: int = ...) -> List[DiagnosticLogPayload]: ...
 
 # ThemeAPI
 class ThemeAPI(QObject):
@@ -185,6 +225,20 @@ class ConfigAPI:
 
     def save(self) -> Any: ...
 
+# GlobalConfigAPI
+class GlobalConfigAPI:
+
+    def __init__(self, app: Any) -> None: ...
+
+    @property
+    def configs(self) -> ConfigManager: ...
+
+    def lock(self, keys: str | List[str] | Set[str]) -> None: ...
+    def unlock(self, keys: str | List[str] | Set[str]) -> None: ...
+    def is_locked(self, key: str) -> bool: ...
+    @property
+    def locked_keys(self) -> Set[str]: ...
+
 
 # AutomationAPI
 class AutomationAPI:
@@ -211,7 +265,6 @@ class UiAPI(QObject):
             icon: Optional[str] = ...
     ) -> None: ...
 
-
 # PluginAPI
 class PluginAPI:
     def __init__(self, app: Any) -> None: ...
@@ -229,6 +282,10 @@ class PluginAPI:
     config: ConfigAPI
     automation: AutomationAPI
     ui: UiAPI
+    schedulemanagement: ScheduleManagementAPI
+    globalconfig: GlobalConfigAPI
+    application: ApplicationAPI
+    diagnostics: DiagnosticsAPI
 
 
 __all__ = [
@@ -238,6 +295,8 @@ __all__ = [
     'RuntimeSubjectPayload',
     'RuntimeRemainingTimePayload',
     'SettingsPagePayload',
+    'ApplicationInfoPayload',
+    'DiagnosticLogPayload',
     'EntryType',
     'WidgetsAPI',
     'NotificationAPI',
@@ -248,4 +307,8 @@ __all__ = [
     'AutomationAPI',
     'UiAPI',
     'PluginAPI',
+    'ScheduleManagementAPI',
+    'GlobalConfigAPI',
+    'ApplicationAPI',
+    'DiagnosticsAPI',
 ]
