@@ -247,6 +247,15 @@ class AutomationAPI:
     def register(self, task: Any) -> None: ...
 
 
+# ActionsAPI
+class ActionsAPI(QObject):
+    def __init__(self, app: Any) -> None: ...
+
+    def register(self, action_name: str, *parameter_types: type) -> Signal[Any]: ...
+
+    def get(self, action_name: str) -> Signal[Any]: ...
+
+
 # UiAPI
 class UiAPI(QObject):
     settingsPageRegistered: Signal
@@ -281,6 +290,7 @@ class PluginAPI:
     runtime: RuntimeAPI
     config: ConfigAPI
     automation: AutomationAPI
+    actions: ActionsAPI
     ui: UiAPI
     schedulemanagement: ScheduleManagementAPI
     globalconfig: GlobalConfigAPI
@@ -305,6 +315,7 @@ __all__ = [
     'RuntimeAPI',
     'ConfigAPI',
     'AutomationAPI',
+    'ActionsAPI',
     'UiAPI',
     'PluginAPI',
     'ScheduleManagementAPI',
