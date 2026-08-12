@@ -4,7 +4,7 @@ Class Widgets 2 Plugin SDK (Runtime Tools)
 import sys
 from typing import TYPE_CHECKING
 
-__version__ = '0.4.2'
+__version__ = '0.5.0'
 __author__ = 'Class Widgets Official'
 
 if TYPE_CHECKING:
@@ -16,6 +16,7 @@ if TYPE_CHECKING:
         RuntimeAPI,
         ConfigAPI,
         AutomationAPI,
+        ActionsAPI,
         UiAPI,
         PluginAPI,
         ScheduleManagementAPI,
@@ -37,6 +38,7 @@ else:
     RuntimeAPI = type('RuntimeAPI', (), {})
     ConfigAPI = type('ConfigAPI', (), {})
     AutomationAPI = type('AutomationAPI', (), {})
+    ActionsAPI = type('ActionsAPI', (), {})
     UiAPI = type('UiAPI', (), {})
     ScheduleManagementAPI = type('ScheduleManagementAPI', (), {})
     GlobalConfigAPI = type('GlobalConfigAPI', (), {})
@@ -54,6 +56,7 @@ __all__ = [
     'RuntimeAPI',
     'ConfigAPI',
     'AutomationAPI',
+    'ActionsAPI',
     'UiAPI',
     'ScheduleManagementAPI',
     'GlobalConfigAPI',
