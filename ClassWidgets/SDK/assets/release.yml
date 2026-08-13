@@ -1,0 +1,76 @@
+name: Release Plugin
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '>=3.9'
+          cache: 'pip'
+      
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          profile: minimal
+          override: true
+      
+      - name: Install git-cliff
+        run: |
+          cargo install git-cliff
+      
+      - name: Install dependencies
+        run: |
+          pip install -e .
+      
+      - name: Build plugin packages
+        run: |
+          # Build .cwplugin format
+          cw-plugin-pack
+          # Build .zip format
+          cw-plugin-pack --format zip
+      
+      - name: Publish to plugin registry
+        env:
+          CWPT_TOKEN: ${{ secrets.CWPT_TOKEN }}
+        run: |
+          cw-plugin-publish
+      
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+      
+      - name: Generate changelog with git-cliff
+        id: generate_changelog
+        run: |
+          git-cliff --config .git-cliff.toml --tag v${{ env.VERSION }} > CHANGELOG.md
+          echo "CHANGELOG<<EOF" >> $GITHUB_ENV
+          cat CHANGELOG.md >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+      
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Release v${{ env.VERSION }}
+          draft: false
+          prerelease: false
+          files: |
+            *.cwplugin
+            *.zip
+          body: ${{ env.CHANGELOG }}
+          generate_release_notes: false

@@ -76,64 +76,9 @@ ENTRY_PY_TEMPLATE = textwrap.dedent("""\
             print(f"{name} unloaded")
 """)
 
-README_TEMPLATE = textwrap.dedent("""\
-    <div align="center">
-     <img src="icon.png" alt="插件图标" width="18%">
-     <h1>{name}</h1>
-     
-     {badges}
-     
-     </div>
-     
-     ## 介绍 / Introduction
-     
-     {description}
-     
-     ### 截图 / Screenshots
-     <div align="center">
-     
-     ![示例](docs/example.png)
-     
-     </div>
-     
-     ### 特性 / Features
-     
-     - Feature 1
-     - Feature 2
-     - Feature 3
-     
-     
-     ## Getting Started / 开始使用
-     
-     1. Install dependencies / 安装依赖: 
-       `pip install -e .`
-       
-    2. Run Class Widgets to test / 运行主程序测试.
-    
-    ## 致谢 / Acknowledgements
-    ### 引用资源 / Credits
-    - https://github.com/rinlit-233-shiroko/class-widgets-2
-    - https://github.com/Class-Widgets/class-widgets-sdk
-    
-    ## 版权 / License
-    本项目基于 MIT 协议开源，详情请参阅 LICENSE 文件。
-    
-    The project is licensed under the MIT license. Please refer to the LICENSE file for details.
-    
-    #
-    
-    Copyright © 2026 {author}.
-""")
-
-DOCS_README_TEMPLATE = textwrap.dedent("""\
-    # Screenshots / 截图
-    
-    Please add your plugin screenshots here.
-    请在此处添加插件截图。
-    
-    - Rename `example.png` to your actual screenshot file
-    - 将 `example.png` 重命名为实际的截图文件
-""")
+README_TEMPLATE_FILENAME = "README.md"
+RELEASE_WORKFLOW_TEMPLATE_FILENAME = "release.yml"
+GIT_CLIFF_TEMPLATE_FILENAME = ".git-cliff.toml"
 
 # --- Helper Functions ---
 
@@ -163,6 +108,38 @@ def get_sdk_asset_path(filename: str) -> Optional[Path]:
     asset_path = base_path / filename
     return asset_path if asset_path.exists() else None
 
+
+def render_readme_template(manifest: PluginManifestModel) -> str:
+    """Render the packaged README template with plugin metadata."""
+    template_path = get_sdk_asset_path(README_TEMPLATE_FILENAME)
+    if template_path is None:
+        raise FileNotFoundError(
+            f"SDK README template not found: {README_TEMPLATE_FILENAME}"
+        )
+
+    github_repo = extract_github_repo(manifest.url)
+    replacements = {
+        "[PluginName]": manifest.name,
+        "[PluginDescription]": manifest.description or "",
+        "[PluginID]": manifest.id,
+        "[GithubOwner_Repo]": github_repo,
+    }
+
+    content = template_path.read_text(encoding="utf-8")
+    for placeholder, value in replacements.items():
+        content = content.replace(placeholder, value)
+    return content
+
+
+def extract_github_repo(url: Optional[str]) -> str:
+    """Return the owner/repository portion of a GitHub URL, if available."""
+    if not url or "github.com/" not in url:
+        return ""
+
+    repository = url.split("github.com/", maxsplit=1)[1]
+    repository = repository.split("?", maxsplit=1)[0].split("#", maxsplit=1)[0]
+    return repository.removesuffix(".git").strip("/")
+
 # --- Core Logic ---
 
 class PluginScaffold:
@@ -177,7 +154,7 @@ class PluginScaffold:
         if not self.target_dir.exists():
             self.target_dir.mkdir(parents=True)
 
-        subdirs = ['qml', 'assets', 'docs']
+        subdirs = ['qml', 'assets']
         for d in subdirs:
             (self.target_dir / d).mkdir(exist_ok=True)
 
@@ -188,8 +165,17 @@ class PluginScaffold:
             "README.md": self._generate_readme,
             ".gitignore": lambda: GITIGNORE_TEMPLATE,
             "pyproject.toml": self._generate_pyproject,
-            "icon.png": self._copy_icon,
-            "docs/README.md": lambda: DOCS_README_TEMPLATE
+            "icon.png": lambda: self._copy_icon(force),
+            ".github/workflows/release.yml": lambda: self._copy_asset(
+                RELEASE_WORKFLOW_TEMPLATE_FILENAME,
+                ".github/workflows/release.yml",
+                force,
+            ),
+            ".git-cliff.toml": lambda: self._copy_asset(
+                GIT_CLIFF_TEMPLATE_FILENAME,
+                ".git-cliff.toml",
+                force,
+            ),
         }
 
         # 3. Execute
@@ -220,19 +206,23 @@ class PluginScaffold:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(content, encoding='utf-8')
 
-    def _copy_icon(self) -> None:
+    def _copy_icon(self, force: bool) -> None:
         """Copies the default icon from SDK assets."""
-        target_path = self.target_dir / "icon.png"
-        if target_path.exists():
+        self._copy_asset("icon.png", "icon.png", force)
+        return None
+
+    def _copy_asset(self, asset_filename: str, destination: str, force: bool) -> None:
+        """Copy a packaged SDK asset into the generated plugin project."""
+        target_path = self.target_dir / destination
+        if target_path.exists() and not force:
             return None
 
-        source_path = get_sdk_asset_path("default_icon.png")
-        if source_path:
-            shutil.copy(source_path, target_path)
-        else:
-            # Fallback if SDK asset missing: create a dummy empty file or warn
-            # click.secho("Warning: Default icon not found in SDK assets.", err=True, fg='yellow')
-            pass
+        source_path = get_sdk_asset_path(asset_filename)
+        if source_path is None:
+            raise FileNotFoundError(f"SDK asset not found: {asset_filename}")
+
+        target_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(source_path, target_path)
         return None
 
     def _generate_manifest(self): return "" # Handled specially inside _write
@@ -241,28 +231,7 @@ class PluginScaffold:
         return ENTRY_PY_TEMPLATE.format(**self.manifest.__dict__)
 
     def _generate_readme(self):
-        badges = ""
-        if self.manifest.url:
-            badges = f"[![星标](https://img.shields.io/github/stars/{self._extract_github_repo()}/?style=for-the-badge&color=orange&label=星标)]({self.manifest.url})\n"
-            badges += f"[![开源许可证](https://img.shields.io/badge/license-MIT-darkgreen.svg?label=开源许可证&style=for-the-badge)]({self.manifest.url}/blob/main/LICENSE)\n"
-            badges += f"[![下载量](https://img.shields.io/github/downloads/{self._extract_github_repo()}/total.svg?label=下载量&color=green&style=for-the-badge)]({self.manifest.url}/releases)\n"
-        
-        return README_TEMPLATE.format(
-            **self.manifest.__dict__,
-            badges=badges
-        )
-
-    def _extract_github_repo(self) -> str:
-        """Extract GitHub repo path from URL for badges."""
-        if not self.manifest.url:
-            return ""
-        
-        url = self.manifest.url
-        if "github.com" in url:
-            parts = url.split("github.com/")
-            if len(parts) > 1:
-                return parts[1].replace(".git", "")
-        return ""
+        return render_readme_template(self.manifest)
 
     def _generate_pyproject(self):
         return PYPROJECT_TEMPLATE.format(
