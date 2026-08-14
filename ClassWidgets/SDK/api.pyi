@@ -59,6 +59,14 @@ class SettingsPagePayload(TypedDict):
     icon: str
 
 
+class ShortcutPayload(TypedDict):
+    id: str
+    name: str
+    icon: str
+    iconIsSource: bool
+    owner: str
+
+
 class ApplicationInfoPayload(TypedDict):
     name: str
     version: str
@@ -259,11 +267,29 @@ class ActionsAPI(QObject):
 # UiAPI
 class UiAPI(QObject):
     settingsPageRegistered: Signal
+    shortcutsChanged: Signal
 
     def __init__(self, app: Any) -> None: ...
 
     @property
     def pages(self) -> List[SettingsPagePayload]: ...
+
+    @property
+    def shortcuts(self) -> List[ShortcutPayload]: ...
+
+    def register_shortcut(
+            self,
+            shortcut_id: str,
+            name: str,
+            icon: Union[str, Path],
+            action: Any
+    ) -> str: ...
+
+    def set_shortcut_name(self, shortcut_id: str, name: str) -> bool: ...
+
+    def unregister_plugin_shortcuts(self, plugin_id: str) -> None: ...
+
+    def invoke_shortcut(self, shortcut_id: str) -> bool: ...
 
     def unregister_settings_page(self, qml_path: Union[str, Path]) -> None: ...
 
@@ -305,6 +331,7 @@ __all__ = [
     'RuntimeSubjectPayload',
     'RuntimeRemainingTimePayload',
     'SettingsPagePayload',
+    'ShortcutPayload',
     'ApplicationInfoPayload',
     'DiagnosticLogPayload',
     'EntryType',
