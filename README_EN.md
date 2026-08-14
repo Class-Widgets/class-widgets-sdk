@@ -18,6 +18,13 @@
 > 
 > This project is still **in development**. The API may change at any time, so please bear with us.
 
+## Documentation
+
+- [docs/README.md](docs/README.md)
+- [docs/quick-start.md](docs/quick-start.md)
+- [docs/api-reference.md](docs/api-reference.md)
+
+
 ## Overview
 `class-widgets-sdk` provides the **essential base classes**, **development tools** (like scaffolding and packaging), and **complete type hints** for creating plugins for Class Widgets 2.
 

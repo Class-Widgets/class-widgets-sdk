@@ -35,6 +35,7 @@ packages = [
 ]
 include = [
     "ClassWidgets/SDK/assets/*",
+    "docs/*.md",
     "ClassWidgets/SDK/**/*.pyi",
     "ClassWidgets/SDK/py.typed",
 ]

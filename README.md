@@ -20,6 +20,12 @@
 >
 > 可从 [Class-Widgets/Plugin-Template-V2](https://github.com/Class-Widgets/plugin-template-v2) 获取最新的插件模板、工作流以快速开始。
 
+## API 使用文档
+
+- [总览](docs/README.md)
+  - [快速开始](docs/quick-start.md)
+  - [API 参考](docs/api-reference.md)
+
 ## 概述
 `class-widgets-sdk` 为创建 Class Widgets 2 插件提供了**核心基类**、**开发工具**（如脚手架和打包）以及**完整的类型提示**。
 
