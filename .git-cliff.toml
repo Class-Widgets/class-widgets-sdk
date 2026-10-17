@@ -46,7 +46,7 @@ body = """
 {% endif %}
 
 {%- macro remote_url() -%}
-  https://github.com/rinlit-233-shiroko/class-widgets-sdk
+  https://github.com/Class-Widgets/class-widgets-sdk
 {%- endmacro -%}
 
 """
